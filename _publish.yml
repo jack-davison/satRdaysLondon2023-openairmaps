@@ -1,0 +1,4 @@
+- source: index.qmd
+  quarto-pub:
+    - id: 1c7feb2c-2f97-4252-a1bf-9adf3dd0bf64
+      url: 'https://quartopub.com/sites/jack-davison/satrdays-london-2023'
