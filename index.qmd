@@ -17,6 +17,7 @@ format:
 execute: 
   eval: true
   echo: true
+  freeze: auto
 ---
 
 ## {background-color="white" background-image="images/background.png"}
@@ -36,6 +37,7 @@ execute:
 <h3> `r fontawesome::fa("twitter", "black")` &nbsp; [twitter.com/JDavison_](https://twitter.com/JDavison_)
 
 <h3> `r fontawesome::fa("linkedin", "black")` &nbsp; [linkedin.com/in/jack-davison/](https://www.linkedin.com/in/jack-davison/)
+
 
 
 ## Air Quality at Ricardo
@@ -84,6 +86,30 @@ Providing a comprehensive understanding of national emissions data and key sourc
 :::
 
 
+
+## Measuring Air Quality
+<hr>
+
+The UK has *a lot* of air quality measurement sites! We use these to track national compliance with AQ objectives, as well as to inform more local-scale policies.
+
+:::aside
+Note that this doesn't even cover the non-automatic networks (e.g., heavy metals) or the non-national networks operated by local authorities!
+:::
+
+:::footer
+<https://uk-air.defra.gov.uk/networks/>
+:::
+
+```{r}
+#| label: networkMap
+#| out-width: "100%"
+#| out-height: "600"
+openairmaps::networkMap(c("aurn", "aqe", "waqn", "saqn", "ni"), cluster = FALSE)
+```
+
+## Why do we care?
+<hr>
+
 ## Simple Example: Central London
 <hr>
 
@@ -97,4 +123,5 @@ Below is a simple example of an `{openairmaps}` "polar map". Users only need to 
 #| out-height: "650"
 openairmaps::polarMap(openairmaps::polar_data, "nox")
 ```
+
 
