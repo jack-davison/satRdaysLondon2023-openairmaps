@@ -1,0 +1,100 @@
+---
+format: 
+  revealjs:
+    theme: ["theme/theme.scss"]
+    slide-number: c/t
+    logo: "images/Ricardo_plc_logo.svg"
+    # footer: "[https://jthomasmock.github.io/arrow-dplyr](https://jthomasmock.github.io/arrow-dplyr)"
+    code-copy: true
+    center-title-slide: false
+    # include-in-header: heading-meta.html
+    code-link: true
+    code-overflow: wrap
+    code-line-numbers: false
+    highlight-style: a11y
+    height: 1080
+    width: 1920
+execute: 
+  eval: true
+  echo: true
+---
+
+## {background-color="white" background-image="images/background.png"}
+
+<h1> "Put it on a map!" </h1>
+
+<h2> Developments in Air Quality Data Analysis </h2>
+
+<p>Dr Jack Davison, AQ Data Analyst</p>
+<p>Ricardo Energy & Environment</p>
+
+<p> April 2023 </p>
+<br>
+
+<h3> `r fontawesome::fa("github", "black")` &nbsp; [github.com/jack-davison](https://github.com/jack-davison)
+
+<h3> `r fontawesome::fa("twitter", "black")` &nbsp; [twitter.com/JDavison_](https://twitter.com/JDavison_)
+
+<h3> `r fontawesome::fa("linkedin", "black")` &nbsp; [linkedin.com/in/jack-davison/](https://www.linkedin.com/in/jack-davison/)
+
+
+## Air Quality at Ricardo
+
+<hr>
+
+:::: {.columns}
+
+::: {.column width="30%"}
+![](images/ric_aq_meas.png)
+
+<h4>Measurements</h4>
+
+Monitor the air to understand compliance with regulatory limits, and design effective actions to reduce impacts on public health & the environment.
+
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="30%"}
+![](images/ric_aq_mod.png)
+
+<h4>Modelling</h4>
+
+Local scale "dispersion modelling" assessments in support of planning or permitting requirements through to national scale modelling
+
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="30%"}
+![](images/ric_aq_inv.png)
+
+<h4>Inventories</h4>
+
+Providing a comprehensive understanding of national emissions data and key sources, in addition to expert interpretation and advice.
+
+:::
+
+::::
+
+::: footer
+<https://www.ricardo.com/en>
+:::
+
+
+## Simple Example: Central London
+<hr>
+
+Below is a simple example of an `{openairmaps}` "polar map". Users only need to provide some data (with `ws`, `wd` and pollutant columns) and their chosen pollutant (here NO<sub>x</sub>).
+
+<br>
+
+```{r}
+#| label: centralLondon
+#| out-width: "100%"
+#| out-height: "650"
+openairmaps::polarMap(openairmaps::polar_data, "nox")
+```
+
