@@ -40,7 +40,27 @@ execute:
 
 
 
-## Air Quality at Ricardo
+
+## What do we mean by "air quality"?
+<hr>
+
+![](https://assets.publishing.service.gov.uk/government/uploads/system/uploads/image_data/file/81099/sources-100.jpg){fig-align="center"}
+
+::: footer
+Source: [UKHSA](https://www.gov.uk/government/publications/health-matters-air-pollution/health-matters-air-pollution)
+:::
+
+
+## Why do we care?
+<hr>
+
+![](https://assets.publishing.service.gov.uk/government/uploads/system/uploads/image_data/file/81010/Infographic_on_the_scale_of_the_problem_with_air_pollution.jpg){fig-align="center"}
+
+::: footer
+Source: [UKHSA](https://www.gov.uk/government/publications/health-matters-air-pollution/health-matters-air-pollution)
+:::
+
+## Air quality at Ricardo
 
 <hr>
 
@@ -59,24 +79,26 @@ Monitor the air to understand compliance with regulatory limits, and design effe
 :::
 
 ::: {.column width="30%"}
+:::{.fragment}
 ![](images/ric_aq_mod.png)
 
 <h4>Modelling</h4>
 
 Local scale "dispersion modelling" assessments in support of planning or permitting requirements through to national scale modelling
-
+:::
 :::
 
 ::: {.column width="5%"}
 :::
 
 ::: {.column width="30%"}
+:::{.fragment}
 ![](images/ric_aq_inv.png)
 
 <h4>Inventories</h4>
 
 Providing a comprehensive understanding of national emissions data and key sources, in addition to expert interpretation and advice.
-
+:::
 :::
 
 ::::
@@ -86,8 +108,30 @@ Providing a comprehensive understanding of national emissions data and key sourc
 :::
 
 
+## My role
+<hr>
 
-## Measuring Air Quality
+I am an "air quality data measurements analyst", but in reality I do a lot of stuff!
+
+> As an overall summary, my work is centred around leveraging R to more effectively communicate air quality data to the public.
+
+* Authoring "annual reports" in Quarto for different networks, as well as ad-hoc reports (e.g., "episode" reports).
+
+* Performing data analysis and creating data visualisations across many different projects.
+
+* Developing new tools to better analyse/visualise data (e.g., `{openair}`, `{openairmaps}`, `{worldmet}`, ...).
+
+. . .
+
+* Facilitate internal & external training to allow others to better understand their own data.
+
+![](images/training-logos.png){width=80% fig-align="center"}
+
+::: footer
+<https://emaq.ricardo.com/>
+:::
+
+## Measuring air quality
 <hr>
 
 The UK has *a lot* of air quality measurement sites! We use these to track national compliance with AQ objectives, as well as to inform more local-scale policies.
@@ -107,10 +151,138 @@ Note that this doesn't even cover the non-automatic networks (e.g., heavy metals
 openairmaps::networkMap(c("aurn", "aqe", "waqn", "saqn", "ni"), cluster = FALSE)
 ```
 
-## Why do we care?
+
+## The `{openair}` package
 <hr>
 
-## Simple Example: Central London
+> `{openair}` is an R package developed for the purpose of analysing air quality data — or more generally atmospheric composition data. The package is extensively used in academia, the public and private sectors.
+
+* It has been around for *a long* time --- over a decade!
+
+* Some things are a bit odd for newer R users (e.g., use of `{lattice}` over `{ggplot2}`!)
+
+* How can we best leverage it in this rapidly developing world of R programming?
+
+::::{.columns}
+
+:::{.column width="45%"}
+
+```{r}
+openair::calendarPlot(openair::mydata, year = 2000)
+```
+
+:::
+
+:::{.column width="10%"}
+:::
+
+:::{.column width="45%"}
+
+```{r}
+#| message: false
+#| warning: false
+openair::TheilSen(openair::mydata, avg.time = "month")
+```
+
+:::
+
+::::
+
+:::footer
+<https://github.com/davidcarslaw/openair>
+:::
+
+## `{openair}` aside: accessing data
+<hr>
+
+Even if you don't really care about air quality, `{openair}` (and `{worldmet}`) can still be useful to you as they provide access to *lots* of timeseries data!
+
+```{r}
+library(openair)
+london_data <- importAURN(c("my1", "kc1"), year = 2022, meta = TRUE)
+london_data
+```
+
+::: footer
+<https://bookdown.org/david_carslaw/openair/UK-air-quality-data.html>
+:::
+
+## Directional analysis I
+<hr>
+
+Answers the question *"where is the pollution coming from?"* ^[As opposed to "trend analysis", *"how are concentrations changing?"*]
+<br>
+
+::::{.columns}
+
+:::{.column width="45%"}
+```{r}
+#| label: fig-windrose
+#| fig-cap: "Wind speed & direction"
+#| fig-height: 6
+openair::windRose(openair::mydata)
+```
+:::
+
+:::{.column width="10%"}
+:::
+
+:::{.column width="45%"}
+
+:::{.fragment}
+
+```{r}
+#| label: fig-pollrose
+#| fig-cap: "Wind dir. & concentration"
+#| fig-height: 6
+openair::pollutionRose(openair::mydata, "nox")
+```
+
+:::
+
+:::
+
+::::
+
+
+## Directional analysis II
+<hr>
+
+Answers the question *"where is the pollution coming from?"* ^[As opposed to "trend analysis", *"how are concentrations changing?"*]
+<br>
+
+::::{.columns}
+
+:::{.column width="45%"}
+```{r}
+#| label: fig-polarFreq
+#| fig-cap: "Wind speed, direction & concentration, binned."
+#| fig-height: 6
+openair::polarFreq(openair::mydata, "nox", "mean", trans = FALSE)
+```
+:::
+
+:::{.column width="10%"}
+:::
+
+:::{.column width="45%"}
+
+:::{.fragment}
+
+```{r}
+#| label: fig-polarPlot
+#| fig-cap: "Wind speed, direction & concentration, smoothed."
+#| fig-height: 6
+openair::polarPlot(openair::mydata, "nox")
+```
+
+:::
+
+:::
+
+::::
+
+## Simple example: Central London
 <hr>
 
 Below is a simple example of an `{openairmaps}` "polar map". Users only need to provide some data (with `ws`, `wd` and pollutant columns) and their chosen pollutant (here NO<sub>x</sub>).
