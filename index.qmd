@@ -20,6 +20,13 @@ execute:
   freeze: auto
 ---
 
+```{r}
+#| label: pkg
+#| include: false
+library(openair)
+library(openairmaps)
+```
+
 ## {background-color="white" background-image="images/background.png"}
 
 <h1> "Put it on a map!" </h1>
@@ -160,10 +167,10 @@ We create *a lot* of dynamic reports using `{rmarkdown}` (although we're slowly 
 ::: {.column width="40%"}
 * Air quality data lends itself to **automatic** reporting as it:
 
-  1. ...is always in a consistent format (date, pollutant concentrations).
-  
-  2. ...is added to our databases continuously after ratification.
-  
+1. ...is always in a consistent format (date, pollutant concentrations).
+
+2. ...is added to our databases continuously after ratification.
+
 * We also create ad-hoc reports in response to pollution "episodes" (particulate matter episodes on bonfire night, ozone episodes during heatwaves, etc.).
 :::
 
@@ -313,18 +320,16 @@ openair::polarPlot(openair::mydata, "nox")
 
 ::::
 
-## Enter `{openairmaps}`!
+## Enter `{openairmaps}`
 
-*Part of the wider "openair toolkit" along with `{openair}`, `{worldmet}` and `{deweather}`.*
+> Part of the wider "openair toolkit" along with `{openair}`, `{worldmet}` and `{deweather}`.
 
 The purpose of `{openairmaps}` was to combine `{openair}`'s directional analysis with the `{leaflet}` package (& javascript library) to create interactive air quality maps that help us **triangulate pollution sources** and understand local air quality in its **geographical context**.
-
-<br>
 
 ```{r}
 #| label: centralLondon
 #| out-width: "100%"
-#| out-height: "650"
+#| out-height: "500"
 openairmaps::polarMap(openairmaps::polar_data, "nox", popup = "site", d.icon = 300, alpha = 3/4)
 ```
 
@@ -359,3 +364,115 @@ Being in the position to *teach* the package also allows a developer to understa
 ::: {.footer}
 [{openairmaps} news](https://github.com/davidcarslaw/openairmaps/blob/master/NEWS.md)
 :::
+
+
+## Case Study: Trends Over Lockdown
+<hr>
+
+Once nice use of the easy layer control options is to view changes over time. For example, we can clearly see the huge impact of the COVID-19 lockdown in Oxford City Centre!
+
+```{r}
+#| label: layercontrol
+#| out-width: "100%"
+#| out-height: "650"
+oxford_road <- importAURN(site = "OX", year = 2018:2022, meta = TRUE)
+polarMap(oxford_road, "nox", # data, pollutant
+         control = "year", # create control menu for the year
+         upper = 20, limits = c(0, 250), # set limits so markers share them
+         alpha = 3/4) # semi-transparency
+```
+
+## Case Study: Source Apportionment
+<hr>
+
+If we have a whole network of sites, we can triangulate potential sources. For example, where are likely sources in a nearby industrial site?
+
+```{r}
+#| label: nlincs
+#| output-location: column
+#| out-width: "100%"
+#| out-height: "550"
+library(dplyr)
+
+# get data
+nlincs_local <- importLocal(
+  c("SCN6", "SC12", "SC10", "AMVL"), 
+  year = 2021, meta = TRUE
+)
+nlincs_aurn <- importAURN(
+  c("SCN2"), 
+  year = 2021, meta = TRUE
+)
+
+# combine
+nlincs_all <- dplyr::bind_rows(
+  nlincs_local, nlincs_aurn
+)
+
+# reuse modelled met for local data
+nlincs_all <-
+  nlincs_all %>%
+  select(-ws, -wd, -air_temp) %>%
+  left_join(
+    select(nlincs_aurn, date, ws:air_temp), 
+    by = join_by(date)
+  )
+
+# polar plot map!
+polarMap(
+  nlincs_all, "pm10", alpha = 3 / 4,
+  # use multiple providers
+  provider = c("OpenStreetMap", "Esri.WorldImagery")
+)
+```
+
+::: {.footer}
+This is a surface-level analysis of a complex air quality situation - please do not draw any lasting conclusions about Scunthorpe from this map!
+:::
+## How does this work under the hood?
+<hr>
+
+:::: {.columns}
+
+::: {.column width="27%"}
+`leaflet::makeIcon()` function can create `{leaflet}` markers out of effectively any image. 
+
+We save the `{openair}` plots in a temporary directory first, and then point `makeIcon()` at these images. 
+
+Everything is contained in a nested dataframe so everything remains properly aligned!
+:::
+
+::: {.column width="3%"}
+:::
+
+::: {.column width="70%"}
+![](images/flowchart.png){height=800}
+:::
+
+::::
+
+```{r}
+#| label: dummy
+#| include: false
+# flowchart LR
+#     subgraph dataframe[Air Quality Dataframe]
+#     alt[AQ Data] -->|nest by\nlat/lng/control| nested[Nested\nAQ Data]
+#     nested -->|has columns| latlng[Lat. & Lng.]
+#     nested -->|has column| control
+#     nested -->|has column| data
+#     nested -->|has columns| popup/label
+#     latlng -->|forms| paths
+#     control -->|forms| paths
+#     data -->|creates| plots
+#     plots -->|saved to| paths
+#     end
+#     subgraph leaf[Leaflet Map]
+#     leaflet -->|%>%| addTiles
+#     addTiles -->|%>%| addMarkers
+#     leaflet -.->|data =| nested
+#     addMarkers -.->|iconURL =| paths
+#     addMarkers -.-> control & latlng & popup/label
+#     end
+```
+
+

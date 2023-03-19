@@ -1,0 +1,34 @@
+
+# How does leaflet work? --------------------------------------------------
+
+library(leaflet)
+
+oxford <-
+  data.frame(
+    lat = c(51.754474, 51.758900),
+    lng = c(-1.260699, -1.259626),
+    label = c("White Rabbit Pizza Restaurant", "Department of Statistics"),
+    popup = c("Where all the tasty pizza comes from!", "The home of OxfordR!")
+  )
+
+leaflet(oxford) %>%
+  addTiles() %>%
+  addMarkers(lat = ~lat,
+             lng = ~lng,
+             label = ~label,
+             popup = ~popup)
+
+
+# What's a nested data frame? ---------------------------------------------
+
+library(dplyr)
+
+leaflet_data <-
+  openairmaps::polar_data %>%
+  nest_by(lat, lon) %>%
+  mutate(
+    path = paste(lat, lon, ".png", sep = "_"),
+    plot = list(openair::polarPlot(data, plot = FALSE)$plot)
+  )
+
+
