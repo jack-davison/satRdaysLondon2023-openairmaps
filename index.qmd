@@ -3,7 +3,7 @@ format:
   revealjs:
     theme: ["theme/theme.scss"]
     slide-number: c/t
-    logo: "images/Ricardo_plc_logo.svg"
+    logo: "images/Ricardo_RGB_Inline.png"
     # footer: "[https://jthomasmock.github.io/arrow-dplyr](https://jthomasmock.github.io/arrow-dplyr)"
     code-copy: true
     center-title-slide: false
@@ -37,9 +37,6 @@ execute:
 <h3> `r fontawesome::fa("twitter", "black")` &nbsp; [twitter.com/JDavison_](https://twitter.com/JDavison_)
 
 <h3> `r fontawesome::fa("linkedin", "black")` &nbsp; [linkedin.com/in/jack-davison/](https://www.linkedin.com/in/jack-davison/)
-
-
-
 
 ## What do we mean by "air quality"?
 <hr>
@@ -136,6 +133,8 @@ I am an "air quality data measurements analyst", but in reality I do a lot of st
 
 The UK has *a lot* of air quality measurement sites! We use these to track national compliance with AQ objectives, as well as to inform more local-scale policies.
 
+<br>
+
 :::aside
 Note that this doesn't even cover the non-automatic networks (e.g., heavy metals) or the non-national networks operated by local authorities!
 :::
@@ -151,23 +150,51 @@ Note that this doesn't even cover the non-automatic networks (e.g., heavy metals
 openairmaps::networkMap(c("aurn", "aqe", "waqn", "saqn", "ni"), cluster = FALSE)
 ```
 
+## Dynamic Reporting
+<hr>
+
+We create *a lot* of dynamic reports using `{rmarkdown}` (although we're slowly transitioning to [Quarto](https://quarto.org)!).
+
+:::: {.columns}
+
+::: {.column width="40%"}
+* Air quality data lends itself to **automatic** reporting as it:
+
+  1. ...is always in a consistent format (date, pollutant concentrations).
+  
+  2. ...is added to our databases continuously after ratification.
+  
+* We also create ad-hoc reports in response to pollution "episodes" (particulate matter episodes on bonfire night, ozone episodes during heatwaves, etc.).
+:::
+
+::: {.column width="60%"}
+[![](images/west-london-screenshot.png)](https://www.ricardo.com/media/c33dncxa/west-london-particulate-episode.html)
+
+:::
+
+::::
+
+Dynamic reports are an excellent middle ground between traditional reports and data dashboards, providing a strong narrative *and* extensibility.
+
+:::footer
+[West London Particulate Episode Report](https://www.ricardo.com/media/c33dncxa/west-london-particulate-episode.html)
+:::
 
 ## The `{openair}` package
 <hr>
 
 > `{openair}` is an R package developed for the purpose of analysing air quality data — or more generally atmospheric composition data. The package is extensively used in academia, the public and private sectors.
 
-* It has been around for *a long* time --- over a decade!
-
-* Some things are a bit odd for newer R users (e.g., use of `{lattice}` over `{ggplot2}`!)
-
-* How can we best leverage it in this rapidly developing world of R programming?
+It has been around for *a long* time --- over a decade! This means some things are a bit odd for newer R users (e.g., use of `{lattice}` over `{ggplot2}`!). Key question - how can we best leverage it in this rapidly developing world of R programming?
 
 ::::{.columns}
 
 :::{.column width="45%"}
 
 ```{r}
+#| label: fig-calendarplot
+#| fig-cap: "A 'calendar plot' - a heatmap in a familiar calendar format."
+#| echo: false
 openair::calendarPlot(openair::mydata, year = 2000)
 ```
 
@@ -179,8 +206,11 @@ openair::calendarPlot(openair::mydata, year = 2000)
 :::{.column width="45%"}
 
 ```{r}
+#| label: fig-theilsen
+#| fig-cap: "A 'Theil Sen trend' - a robust trend fit to a timeseries."
 #| message: false
 #| warning: false
+#| echo: false
 openair::TheilSen(openair::mydata, avg.time = "month")
 ```
 
@@ -198,6 +228,7 @@ openair::TheilSen(openair::mydata, avg.time = "month")
 Even if you don't really care about air quality, `{openair}` (and `{worldmet}`) can still be useful to you as they provide access to *lots* of timeseries data!
 
 ```{r}
+#| label: loaddata
 library(openair)
 london_data <- importAURN(c("my1", "kc1"), year = 2022, meta = TRUE)
 london_data
@@ -282,10 +313,11 @@ openair::polarPlot(openair::mydata, "nox")
 
 ::::
 
-## Simple example: Central London
-<hr>
+## Enter `{openairmaps}`!
 
-Below is a simple example of an `{openairmaps}` "polar map". Users only need to provide some data (with `ws`, `wd` and pollutant columns) and their chosen pollutant (here NO<sub>x</sub>).
+*Part of the wider "openair toolkit" along with `{openair}`, `{worldmet}` and `{deweather}`.*
+
+The purpose of `{openairmaps}` was to combine `{openair}`'s directional analysis with the `{leaflet}` package (& javascript library) to create interactive air quality maps that help us **triangulate pollution sources** and understand local air quality in its **geographical context**.
 
 <br>
 
@@ -293,7 +325,37 @@ Below is a simple example of an `{openairmaps}` "polar map". Users only need to 
 #| label: centralLondon
 #| out-width: "100%"
 #| out-height: "650"
-openairmaps::polarMap(openairmaps::polar_data, "nox")
+openairmaps::polarMap(openairmaps::polar_data, "nox", popup = "site", d.icon = 300, alpha = 3/4)
 ```
 
+## Package Development
+<hr>
 
+Once I got started, I was hooked! Every time you *think* you're done, you're dragged back in to expand on the functionality further.
+
+![](images/timeline.svg){width=100%}
+
+. . .
+
+Being in the position to *teach* the package also allows a developer to understand what users are actually interested in.
+
+<!-- %%{init: { 'logLevel': 'debug', 'theme': 'dark', 'timeline': {'disableMulticolor': true}}}%% -->
+
+<!-- timeline -->
+<!--     Pre-release : `polarMap()` -->
+<!--     v0.4 : `polarMap()` Family -->
+<!--          : `trajMap()` Family -->
+<!--          : `networkMap()` -->
+<!--     v0.5 : Popups & labels -->
+<!--          : Arbitrary Control Menus -->
+<!--     v0.6 : Shared marker scales -->
+<!--          : Multi-network visualisation -->
+<!--     v0.7 : Static polar maps -->
+<!--          : `diffMap()` -->
+<!--          : Map transparency -->
+<!--     v0.8 : Static trajectory maps -->
+<!--          : Popup/control QOL -->
+
+::: {.footer}
+[{openairmaps} news](https://github.com/davidcarslaw/openairmaps/blob/master/NEWS.md)
+:::
