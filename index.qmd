@@ -18,6 +18,8 @@ execute:
   eval: true
   echo: true
   freeze: auto
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r}
@@ -44,6 +46,9 @@ library(openairmaps)
 <h3> `r fontawesome::fa("twitter", "black")` &nbsp; [twitter.com/JDavison_](https://twitter.com/JDavison_)
 
 <h3> `r fontawesome::fa("linkedin", "black")` &nbsp; [linkedin.com/in/jack-davison/](https://www.linkedin.com/in/jack-davison/)
+
+<h3> `r fontawesome::fa("arrow-pointer", "black")` &nbsp;
+[jack-davison.github.io/](https://jack-davison.github.io/)
 
 ## What do we mean by "air quality"?
 <hr>
@@ -165,16 +170,17 @@ We create *a lot* of dynamic reports using `{rmarkdown}` (although we're slowly 
 :::: {.columns}
 
 ::: {.column width="40%"}
-* Air quality data lends itself to **automatic** reporting as it:
+* Air quality data lends itself to **automatic** reporting as it...
 
-1. ...is always in a consistent format (date, pollutant concentrations).
+  1. ...is always in a consistent format (date, pollutant concentrations, met data).
 
-2. ...is added to our databases continuously after ratification.
+  2. ...is added to our databases continuously after ratification.
 
 * We also create ad-hoc reports in response to pollution "episodes" (particulate matter episodes on bonfire night, ozone episodes during heatwaves, etc.).
 :::
 
 ::: {.column width="60%"}
+<br>
 [![](images/west-london-screenshot.png)](https://www.ricardo.com/media/c33dncxa/west-london-particulate-episode.html)
 
 :::
@@ -188,6 +194,7 @@ Dynamic reports are an excellent middle ground between traditional reports and d
 :::
 
 ## The `{openair}` package
+### Introduction
 <hr>
 
 > `{openair}` is an R package developed for the purpose of analysing air quality data — or more generally atmospheric composition data. The package is extensively used in academia, the public and private sectors.
@@ -213,12 +220,19 @@ openair::calendarPlot(openair::mydata, year = 2000)
 :::{.column width="45%"}
 
 ```{r}
+#| label: maketheil
+#| include: false
+ts <- openair::TheilSen(openair::mydata, avg.time = "month")
+```
+
+
+```{r}
 #| label: fig-theilsen
 #| fig-cap: "A 'Theil Sen trend' - a robust trend fit to a timeseries."
 #| message: false
 #| warning: false
 #| echo: false
-openair::TheilSen(openair::mydata, avg.time = "month")
+ts$plot
 ```
 
 :::
@@ -229,7 +243,8 @@ openair::TheilSen(openair::mydata, avg.time = "month")
 <https://github.com/davidcarslaw/openair>
 :::
 
-## `{openair}` aside: accessing data
+## The `{openair}` package
+### Data Access
 <hr>
 
 Even if you don't really care about air quality, `{openair}` (and `{worldmet}`) can still be useful to you as they provide access to *lots* of timeseries data!
@@ -245,7 +260,8 @@ london_data
 <https://bookdown.org/david_carslaw/openair/UK-air-quality-data.html>
 :::
 
-## Directional analysis I
+## Directional analysis
+### Univariate
 <hr>
 
 Answers the question *"where is the pollution coming from?"* ^[As opposed to "trend analysis", *"how are concentrations changing?"*]
@@ -283,7 +299,8 @@ openair::pollutionRose(openair::mydata, "nox")
 ::::
 
 
-## Directional analysis II
+## Directional analysis
+### Bivariate
 <hr>
 
 Answers the question *"where is the pollution coming from?"* ^[As opposed to "trend analysis", *"how are concentrations changing?"*]
@@ -321,6 +338,7 @@ openair::polarPlot(openair::mydata, "nox")
 ::::
 
 ## Enter `{openairmaps}`
+<hr>
 
 > Part of the wider "openair toolkit" along with `{openair}`, `{worldmet}` and `{deweather}`.
 
@@ -365,8 +383,8 @@ Being in the position to *teach* the package also allows a developer to understa
 [{openairmaps} news](https://github.com/davidcarslaw/openairmaps/blob/master/NEWS.md)
 :::
 
-
-## Case Study: Trends Over Lockdown
+## Case Studies
+### Trends Over Lockdown
 <hr>
 
 Once nice use of the easy layer control options is to view changes over time. For example, we can clearly see the huge impact of the COVID-19 lockdown in Oxford City Centre!
@@ -374,15 +392,16 @@ Once nice use of the easy layer control options is to view changes over time. Fo
 ```{r}
 #| label: layercontrol
 #| out-width: "100%"
-#| out-height: "650"
+#| out-height: "600"
 oxford_road <- importAURN(site = "OX", year = 2018:2022, meta = TRUE)
 polarMap(oxford_road, "nox", # data, pollutant
          control = "year", # create control menu for the year
          upper = 20, limits = c(0, 250), # set limits so markers share them
-         alpha = 3/4) # semi-transparency
+         d.icon = 300, alpha = 3/4) # semi-transparency
 ```
 
-## Case Study: Source Apportionment
+## Case Studies
+### Source Apportionment
 <hr>
 
 If we have a whole network of sites, we can triangulate potential sources. For example, where are likely sources in a nearby industrial site?
@@ -426,10 +445,55 @@ polarMap(
 )
 ```
 
-::: {.footer}
 This is a surface-level analysis of a complex air quality situation - please do not draw any lasting conclusions about Scunthorpe from this map!
-:::
-## How does this work under the hood?
+
+## Case Studies 
+### 24 Hours in Central London
+<hr>
+
+Using different plots as markers can reveal even more interesting features - for example, the `polarAnnulus()` plot can show how pollution typically varies over a 24 hour period.
+
+```{r}
+#| label: londonannulus
+#| out-width: "100%"
+#| out-height: "600"
+london <- importAURN(site = c('CLL2', 'MY1', 'KC1'), year = 2019, meta = TRUE)
+annulusMap(london, d.icon = 300, c("nox", "pm10", "so2"), # multiple pollutants!
+           provider = "CartoDB.Positron", # just to demo - a different provider
+           cols = "viridis") # and a different colour palette
+```
+
+## How does this work "under the hood"?
+### The `{leaflet}` package
+<hr>
+
+The `{leaflet}` package makes it really easy to construct interactive web maps. Look closely around the web and you'll find `{leaflet}` maps *everywhere*. An example of a map is shown below.
+
+```{r}
+#| label: leaflet
+#| output-location: column
+#| out-width: "100%"
+#| out-height: "550"
+library(leaflet)
+
+oxford <-
+  data.frame(
+    lat = c(51.754474, 51.758900),
+    lng = c(-1.260699, -1.259626),
+    label = c("White Rabbit Pizza Restaurant", "Department of Statistics"),
+    popup = c("Where all the tasty pizza comes from!", "The home of OxfordR!")
+  )
+
+leaflet(oxford) %>%
+  addTiles() %>%
+  addMarkers(lat = ~lat,
+             lng = ~lng,
+             label = ~label,
+             popup = ~popup)
+```
+
+## How does this work "under the hood"?
+### The `{openairmaps}` way
 <hr>
 
 :::: {.columns}
@@ -474,5 +538,4 @@ Everything is contained in a nested dataframe so everything remains properly ali
 #     addMarkers -.-> control & latlng & popup/label
 #     end
 ```
-
 

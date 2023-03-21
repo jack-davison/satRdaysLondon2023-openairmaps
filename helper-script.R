@@ -23,12 +23,35 @@ leaflet(oxford) %>%
 
 library(dplyr)
 
+# nest
 leaflet_data <-
   openairmaps::polar_data %>%
   nest_by(lat, lon) %>%
   mutate(
-    path = paste(lat, lon, ".png", sep = "_"),
+    path = paste0(lat, "_", lon, ".png"),
     plot = list(openair::polarPlot(data, plot = FALSE)$plot)
   )
 
+# save
+purrr::walk2(
+  .x = leaflet_data$path,
+  .y = leaflet_data$plot,
+  .f = ~{
+    png(.x)
+    plot(.y)
+    dev.off()
+  }
+)
 
+# map
+leaflet(leaflet_data) %>%
+  addTiles() %>%
+  addMarkers(
+    icon = ~ makeIcon(
+      path,
+      iconWidth = 200,
+      iconHeight = 200,
+      iconAnchorX = 100,
+      iconAnchorY = 100
+    )
+  )
