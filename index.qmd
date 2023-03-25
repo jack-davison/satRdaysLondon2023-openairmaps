@@ -59,6 +59,15 @@ library(openairmaps)
 Source: [UKHSA](https://www.gov.uk/government/publications/health-matters-air-pollution/health-matters-air-pollution)
 :::
 
+::: {.notes}
+Key pollutants:
+- Nox (combustion, respiratory/cardio health)
+- PM (variety of sources, variety of health effects)
+- SO2 (similar to NOx, acid rain, forms secondary PM)
+- NH3 (acidification, nitrification, and eutrophication)
+- NMVOC (lots of sources, secondary PM, some directly carcinogenic)
+:::
+
 
 ## Why do we care?
 <hr>
@@ -67,6 +76,14 @@ Source: [UKHSA](https://www.gov.uk/government/publications/health-matters-air-po
 
 ::: footer
 Source: [UKHSA](https://www.gov.uk/government/publications/health-matters-air-pollution/health-matters-air-pollution)
+:::
+
+::: {.notes}
+WHO - air quality is up with obesity/smoking/etc. in terms of public health impacts
+Ella Kissi-Debrah - first person in the world to have air pollution listed as a cause of death
+Evidence continues to mount - air pollution is bad for lung capacity, mental health, physical health
+"At risk" people (pregnant, elderly, young) are most affected
+Causes of bad air often correlate w/ other issues (climate, societal atomisation,)
 :::
 
 ## Air quality at Ricardo
@@ -257,7 +274,7 @@ london_data
 ```
 
 ::: footer
-<https://bookdown.org/david_carslaw/openair/UK-air-quality-data.html>
+`openair` book: [Accessing UK Air Quality Data](https://bookdown.org/david_carslaw/openair/sections/data-access/UK-air-quality-data.html)
 :::
 
 ## Directional analysis
@@ -350,38 +367,6 @@ The purpose of `{openairmaps}` was to combine `{openair}`'s directional analysis
 #| out-height: "500"
 openairmaps::polarMap(openairmaps::polar_data, "nox", popup = "site", d.icon = 300, alpha = 3/4)
 ```
-
-## Package Development
-<hr>
-
-Once I got started, I was hooked! Every time you *think* you're done, you're dragged back in to expand on the functionality further.
-
-![](images/timeline.svg){width=100%}
-
-. . .
-
-Being in the position to *teach* the package also allows a developer to understand what users are actually interested in.
-
-<!-- %%{init: { 'logLevel': 'debug', 'theme': 'dark', 'timeline': {'disableMulticolor': true}}}%% -->
-
-<!-- timeline -->
-<!--     Pre-release : `polarMap()` -->
-<!--     v0.4 : `polarMap()` Family -->
-<!--          : `trajMap()` Family -->
-<!--          : `networkMap()` -->
-<!--     v0.5 : Popups & labels -->
-<!--          : Arbitrary Control Menus -->
-<!--     v0.6 : Shared marker scales -->
-<!--          : Multi-network visualisation -->
-<!--     v0.7 : Static polar maps -->
-<!--          : `diffMap()` -->
-<!--          : Map transparency -->
-<!--     v0.8 : Static trajectory maps -->
-<!--          : Popup/control QOL -->
-
-::: {.footer}
-[{openairmaps} news](https://github.com/davidcarslaw/openairmaps/blob/master/NEWS.md)
-:::
 
 ## Case Studies
 ### Trends Over Lockdown
@@ -539,3 +524,60 @@ Everything is contained in a nested dataframe so everything remains properly ali
 #     end
 ```
 
+
+## Package Development
+<hr>
+
+Once I got started, I was hooked! Every time you *think* you're done, you're dragged back in to expand on the functionality further.
+
+![](images/timeline.svg){width=100%}
+
+. . .
+
+Being in the position to *teach* the package also allows a developer to understand what users are actually interested in.
+
+::: {.footer}
+[{openairmaps} news](https://github.com/davidcarslaw/openairmaps/blob/master/NEWS.md)
+:::
+
+## Future Directions
+<hr>
+
+Every time I think `{openairmaps}` is "done", something new comes along!
+
+- Could trend analysis be better "baked in" to `{openairmaps}` to more easily compare AQ trends?
+
+- Is there space for more straightforward maps, like "spot concentration" or DAQI maps?
+
+- Are there any `{leaflet}` extensions that we could make use of? e.g., `{leaftime}`
+
+. . . 
+
+Potential future directions in the `{openair}` world?
+
+- Proper `{ggplot2}` implementations of `{openair}` plots to allow for more customisation - a big refactor like that is hard work, however!
+
+- Interactive (e.g., `{plotly}`) implementations of `{openair}` plots, given the growth of dynamic reporting.
+
+- Something in the tables space - [had an early attempt a few years ago](https://jack-davison.quarto.pub/gt-openair/) but could it be expanded/packaged up?
+
+## {background-color="white" background-image="images/background.png"}
+
+<h1> "Put it on a map!" </h1>
+
+<h2> Developments in Air Quality Data Analysis </h2>
+
+<p>Dr Jack Davison, AQ Data Analyst</p>
+<p>Ricardo Energy & Environment</p>
+
+<p> April 2023 </p>
+<br>
+
+<h3> `r fontawesome::fa("github", "black")` &nbsp; [github.com/jack-davison](https://github.com/jack-davison)
+
+<h3> `r fontawesome::fa("twitter", "black")` &nbsp; [twitter.com/JDavison_](https://twitter.com/JDavison_)
+
+<h3> `r fontawesome::fa("linkedin", "black")` &nbsp; [linkedin.com/in/jack-davison/](https://www.linkedin.com/in/jack-davison/)
+
+<h3> `r fontawesome::fa("arrow-pointer", "black")` &nbsp;
+[jack-davison.github.io/](https://jack-davison.github.io/)
