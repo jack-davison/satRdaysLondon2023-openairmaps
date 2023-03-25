@@ -52,6 +52,14 @@ library(openairmaps)
 
 ## What do we mean by "air quality"?
 <hr>
+![](https://imgs.xkcd.com/comics/average_familiarity.png){fig-align="center"}
+
+::: footer
+<https://xkcd.com/2501/>
+:::
+
+## What do we mean by "air quality"?
+<hr>
 
 ![](https://assets.publishing.service.gov.uk/government/uploads/system/uploads/image_data/file/81099/sources-100.jpg){fig-align="center"}
 
@@ -61,13 +69,17 @@ Source: [UKHSA](https://www.gov.uk/government/publications/health-matters-air-po
 
 ::: {.notes}
 Key pollutants:
+
 - Nox (combustion, respiratory/cardio health)
+
 - PM (variety of sources, variety of health effects)
+
 - SO2 (similar to NOx, acid rain, forms secondary PM)
+
 - NH3 (acidification, nitrification, and eutrophication)
+
 - NMVOC (lots of sources, secondary PM, some directly carcinogenic)
 :::
-
 
 ## Why do we care?
 <hr>
@@ -80,10 +92,13 @@ Source: [UKHSA](https://www.gov.uk/government/publications/health-matters-air-po
 
 ::: {.notes}
 WHO - air quality is up with obesity/smoking/etc. in terms of public health impacts
+
 Ella Kissi-Debrah - first person in the world to have air pollution listed as a cause of death
 Evidence continues to mount - air pollution is bad for lung capacity, mental health, physical health
+
 "At risk" people (pregnant, elderly, young) are most affected
-Causes of bad air often correlate w/ other issues (climate, societal atomisation,)
+
+Causes of bad air often correlate w/ other issues (climate, mental health, etc.)
 :::
 
 ## Air quality at Ricardo
@@ -133,6 +148,13 @@ Providing a comprehensive understanding of national emissions data and key sourc
 <https://www.ricardo.com/en>
 :::
 
+::: {.notes}
+Monitoring tells you what's happening right now.
+
+Modelling tells you what might happen in the future.
+
+Inventory compilation attempts to sum up what's happened in the past.
+:::
 
 ## My role
 <hr>
@@ -178,6 +200,16 @@ Note that this doesn't even cover the non-automatic networks (e.g., heavy metals
 #| out-height: "600"
 openairmaps::networkMap(c("aurn", "aqe", "waqn", "saqn", "ni"), cluster = FALSE)
 ```
+
+::: {.notes}
+Click on the sites.
+
+Note different conditions per site - different site types, pollutants, met conditions, etc.
+
+Even same site types might be drastically different.
+
+Lots of data!
+:::
 
 ## Dynamic Reporting
 <hr>
@@ -277,6 +309,10 @@ london_data
 `openair` book: [Accessing UK Air Quality Data](https://bookdown.org/david_carslaw/openair/sections/data-access/UK-air-quality-data.html)
 :::
 
+::: {.notes}
+This is useful for those doing any kind of time series analysis, or just want data for teaching, etc.
+:::
+
 ## Directional analysis
 ### Univariate
 <hr>
@@ -368,6 +404,38 @@ The purpose of `{openairmaps}` was to combine `{openair}`'s directional analysis
 openairmaps::polarMap(openairmaps::polar_data, "nox", popup = "site", d.icon = 300, alpha = 3/4)
 ```
 
+::: {.notes}
+Explain what each one is:
+
+- London N. Kensington: background site, typical "bullseye"
+
+- London Bloomsbury: stack source, high wind conditions (with some local)
+
+- Marylebone Road: roadside source, offset from centre
+
+- London Cromwell Road 2: hybrid of different sources
+:::
+
+
+## Package Development
+<hr>
+
+Once I got started, I was hooked! Every time you *think* you're done, you're dragged back in to expand on the functionality further.
+
+![](images/timeline.svg){width=100%}
+
+. . .
+
+Being in the position to *teach* the package also allows a developer to understand what users are actually interested in.
+
+::: {.footer}
+[{openairmaps} news](https://github.com/davidcarslaw/openairmaps/blob/master/NEWS.md)
+:::
+
+::: {.notes}
+Go through the different features and explain the updates.
+:::
+
 ## Case Studies
 ### Trends Over Lockdown
 <hr>
@@ -384,6 +452,14 @@ polarMap(oxford_road, "nox", # data, pollutant
          upper = 20, limits = c(0, 250), # set limits so markers share them
          d.icon = 300, alpha = 3/4) # semi-transparency
 ```
+
+::: {.notes}
+This is the use of "control" to create a layer control menu.
+
+Also setting limits to create a legend.
+
+See how trends progressed year-on-year - we've not gone up again after COVID!
+:::
 
 ## Case Studies
 ### Source Apportionment
@@ -432,6 +508,14 @@ polarMap(
 
 This is a surface-level analysis of a complex air quality situation - please do not draw any lasting conclusions about Scunthorpe from this map!
 
+::: {.notes}
+Multiple sites per map.
+
+Multiple providers.
+
+Triangulate sources - where do the red bits point to?
+:::
+
 ## Case Studies 
 ### 24 Hours in Central London
 <hr>
@@ -447,6 +531,16 @@ annulusMap(london, d.icon = 300, c("nox", "pm10", "so2"), # multiple pollutants!
            provider = "CartoDB.Positron", # just to demo - a different provider
            cols = "viridis") # and a different colour palette
 ```
+
+::: {.notes}
+Annulus plots have a radial axis showing hour of day (or other time-based features). 
+
+Multiple pollutants.
+
+Different provider & colour scheme.
+
+Some pollutants share features - common sources?
+:::
 
 ## How does this work "under the hood"?
 ### The `{leaflet}` package
@@ -524,20 +618,10 @@ Everything is contained in a nested dataframe so everything remains properly ali
 #     end
 ```
 
+::: {.notes}
+Mention interesting feature of `png()` on different systems!
 
-## Package Development
-<hr>
-
-Once I got started, I was hooked! Every time you *think* you're done, you're dragged back in to expand on the functionality further.
-
-![](images/timeline.svg){width=100%}
-
-. . .
-
-Being in the position to *teach* the package also allows a developer to understand what users are actually interested in.
-
-::: {.footer}
-[{openairmaps} news](https://github.com/davidcarslaw/openairmaps/blob/master/NEWS.md)
+When doing this "live", demo `{leaflet}`.
 :::
 
 ## Future Directions
@@ -581,3 +665,13 @@ Potential future directions in the `{openair}` world?
 
 <h3> `r fontawesome::fa("arrow-pointer", "black")` &nbsp;
 [jack-davison.github.io/](https://jack-davison.github.io/)
+
+::: footer
+<https://github.com/jack-davison/satRdaysLondon2023-openairmaps>
+:::
+
+::: {.notes}
+Any questions?
+
+Everything is reproducible, but some of the options were optimised for revealjs.
+:::
