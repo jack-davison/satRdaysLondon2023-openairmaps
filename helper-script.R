@@ -55,3 +55,4 @@ leaflet(leaflet_data) %>%
       iconAnchorY = 100
     )
   )
+ 

@@ -50,13 +50,13 @@ library(openairmaps)
 <h3> `r fontawesome::fa("arrow-pointer", "black")` &nbsp;
 [jack-davison.github.io/](https://jack-davison.github.io/)
 
-## What do we mean by "air quality"?
-<hr>
-![](https://imgs.xkcd.com/comics/average_familiarity.png){fig-align="center"}
+<!-- ## What do we mean by "air quality"? -->
+<!-- <hr> -->
+<!-- ![](https://imgs.xkcd.com/comics/average_familiarity.png){fig-align="center"} -->
 
-::: footer
-<https://xkcd.com/2501/>
-:::
+<!-- ::: footer -->
+<!-- <https://xkcd.com/2501/> -->
+<!-- ::: -->
 
 ## What do we mean by "air quality"?
 <hr>
@@ -101,83 +101,60 @@ Evidence continues to mount - air pollution is bad for lung capacity, mental hea
 Causes of bad air often correlate w/ other issues (climate, mental health, etc.)
 :::
 
-## Air quality at Ricardo
+<!-- ## Air quality at Ricardo -->
 
-<hr>
+<!-- <hr> -->
 
-:::: {.columns}
+<!-- :::: {.columns} -->
 
-::: {.column width="30%"}
-![](images/ric_aq_meas.png)
+<!-- ::: {.column width="30%"} -->
+<!-- ![](images/ric_aq_meas.png) -->
 
-<h4>Measurements</h4>
+<!-- <h4>Measurements</h4> -->
 
-Monitor the air to understand compliance with regulatory limits, and design effective actions to reduce impacts on public health & the environment.
+<!-- Monitor the air to understand compliance with regulatory limits, and design effective actions to reduce impacts on public health & the environment. -->
 
-:::
+<!-- ::: -->
 
-::: {.column width="5%"}
-:::
+<!-- ::: {.column width="5%"} -->
+<!-- ::: -->
 
-::: {.column width="30%"}
-:::{.fragment}
-![](images/ric_aq_mod.png)
+<!-- ::: {.column width="30%"} -->
+<!-- :::{.fragment} -->
+<!-- ![](images/ric_aq_mod.png) -->
 
-<h4>Modelling</h4>
+<!-- <h4>Modelling</h4> -->
 
-Local scale "dispersion modelling" assessments in support of planning or permitting requirements through to national scale modelling
-:::
-:::
+<!-- Local scale "dispersion modelling" assessments in support of planning or permitting requirements through to national scale modelling -->
+<!-- ::: -->
+<!-- ::: -->
 
-::: {.column width="5%"}
-:::
+<!-- ::: {.column width="5%"} -->
+<!-- ::: -->
 
-::: {.column width="30%"}
-:::{.fragment}
-![](images/ric_aq_inv.png)
+<!-- ::: {.column width="30%"} -->
+<!-- :::{.fragment} -->
+<!-- ![](images/ric_aq_inv.png) -->
 
-<h4>Inventories</h4>
+<!-- <h4>Inventories</h4> -->
 
-Providing a comprehensive understanding of national emissions data and key sources, in addition to expert interpretation and advice.
-:::
-:::
+<!-- Providing a comprehensive understanding of national emissions data and key sources, in addition to expert interpretation and advice. -->
+<!-- ::: -->
+<!-- ::: -->
 
-::::
+<!-- :::: -->
 
-::: footer
-<https://www.ricardo.com/en>
-:::
+<!-- ::: footer -->
+<!-- <https://www.ricardo.com/en> -->
+<!-- ::: -->
 
-::: {.notes}
-Monitoring tells you what's happening right now.
+<!-- ::: {.notes} -->
+<!-- Monitoring tells you what's happening right now. -->
 
-Modelling tells you what might happen in the future.
+<!-- Modelling tells you what might happen in the future. -->
 
-Inventory compilation attempts to sum up what's happened in the past.
-:::
-
-## My role
-<hr>
-
-I am an "air quality data measurements analyst", but in reality I do a lot of stuff!
-
-> As an overall summary, my work is centred around leveraging R to more effectively communicate air quality data to the public.
-
-* Authoring "annual reports" in Quarto for different networks, as well as ad-hoc reports (e.g., "episode" reports).
-
-* Performing data analysis and creating data visualisations across many different projects.
-
-* Developing new tools to better analyse/visualise data (e.g., `{openair}`, `{openairmaps}`, `{worldmet}`, ...).
-
-. . .
-
-* Facilitate internal & external training to allow others to better understand their own data.
-
-![](images/training-logos.png){width=80% fig-align="center"}
-
-::: footer
-<https://emaq.ricardo.com/>
-:::
+<!-- Inventory compilation attempts to sum up what's happened in the past. -->
+<!-- ::: -->
 
 ## Measuring air quality
 <hr>
@@ -210,6 +187,30 @@ Even same site types might be drastically different.
 
 Lots of data!
 :::
+
+## My role
+<hr>
+
+I am an "air quality measurements data analyst", but in reality I do a lot of stuff!
+
+> As an overall summary, my work is centred around leveraging R to more effectively communicate air quality data to the public.
+
+* Authoring "annual reports" in Quarto for different networks, as well as ad-hoc reports (e.g., "episode" reports).
+
+* Performing data analysis and creating data visualisations across many different projects.
+
+* Developing new tools to better analyse/visualise data (e.g., `{openair}`, `{openairmaps}`, `{worldmet}`, ...).
+
+. . .
+
+* Facilitate internal & external training to allow others to better understand their own data.
+
+![](images/training-logos.png){width=80% fig-align="center"}
+
+::: footer
+<https://emaq.ricardo.com/>
+:::
+
 
 ## Dynamic Reporting
 <hr>
